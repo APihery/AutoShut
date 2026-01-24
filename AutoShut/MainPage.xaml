@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:AutoShut.ViewModels"
+             xmlns:models="clr-namespace:AutoShut.Models"
+             xmlns:behaviors="clr-namespace:AutoShut.Behaviors"
+             x:Class="AutoShut.MainPage"
+             x:DataType="viewmodels:MainViewModel"
+             Title="AutoShut for Blender">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="CardStyle" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="#111827" />
+                <Setter Property="Stroke" Value="#4B5563" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+                <Setter Property="Padding" Value="20" />
+                <Setter Property="Margin" Value="0,0,0,14" />
+                <Setter Property="Shadow">
+                    <Shadow Brush="Black" 
+                            Offset="0,3" 
+                            Radius="12" 
+                            Opacity="0.08" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="StatusLabelStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="OpenSansSemibold" />
+            </Style>
+
+            <Style x:Key="FileNameStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="FontFamily" Value="OpenSansSemibold" />
+            </Style>
+
+            <Style x:Key="InfoTextStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontFamily" Value="OpenSansRegular" />
+            </Style>
+
+            <Style x:Key="HeaderTitleStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="30" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="FontFamily" Value="OpenSansSemibold" />
+            </Style>
+
+            <Style x:Key="HeaderSubtitleStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontFamily" Value="OpenSansRegular" />
+            </Style>
+
+            <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#512BD4" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="FontFamily" Value="OpenSansSemibold" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Padding" Value="24,16" />
+                <Setter Property="Margin" Value="0,8" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1.02" />
+                                    <Setter Property="Opacity" Value="0.9" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Pressed">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="0.95" />
+                                    <Setter Property="Opacity" Value="0.8" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
+            <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#4B5563" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="FontFamily" Value="OpenSansSemibold" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Padding" Value="24,16" />
+                <Setter Property="Margin" Value="0,8" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1.02" />
+                                    <Setter Property="Opacity" Value="0.9" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Pressed">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="0.95" />
+                                    <Setter Property="Opacity" Value="0.8" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
+            <Style x:Key="IconButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="Pressed">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="0.85" />
+                                    <Setter Property="Opacity" Value="0.7" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="*,Auto,Auto,Auto" Padding="24">
+        <Border Grid.Row="0" 
+                x:Name="DropZone"
+                Style="{StaticResource CardStyle}"
+                BackgroundColor="#030712"
+                StrokeThickness="2"
+                StrokeDashArray="5,5">
+            <Grid RowDefinitions="*">
+                <VerticalStackLayout x:Name="EmptyState" 
+                                     Grid.Row="0"
+                                     IsVisible="{Binding HasFiles, Converter={StaticResource InverseBoolConverter}}"
+                                     Spacing="16"
+                                     VerticalOptions="Center"
+                                     HorizontalOptions="Center"
+                                     InputTransparent="False">
+                    <Image Source="iconblendfile.png"
+                           WidthRequest="120"
+                           HeightRequest="120"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                    <Label Text="Drag and drop your Blender files here" 
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="#9CA3AF" />
+                    <Label Text="or" 
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           TextColor="#6B7280" />
+                    <Button Text="Browse Files" 
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Clicked="OnBrowseFilesClicked"
+                            IsEnabled="True">
+                        <Button.Behaviors>
+                            <behaviors:HoverButtonBehavior />
+                        </Button.Behaviors>
+                    </Button>
+                </VerticalStackLayout>
+
+                <CollectionView x:Name="FilesCollectionView"
+                                Grid.Row="0"
+                                ItemsSource="{Binding BlenderFiles}"
+                                IsVisible="{Binding HasFiles}"
+                                SelectionMode="None"
+                                Margin="0,8,0,0"
+                                VerticalOptions="Fill"
+                                HorizontalOptions="Fill"
+                                BackgroundColor="Transparent"
+                                InputTransparent="{Binding HasFiles, Converter={StaticResource InverseBoolConverter}}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="8" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:BlenderFile">
+                            <Border BackgroundColor="#1F2937"
+                                    Margin="0,0,0,8"
+                                    Padding="20"
+                                    StrokeThickness="1"
+                                    Stroke="#4B5563"
+                                    StrokeShape="RoundRectangle 12">
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" 
+                                      ColumnSpacing="18"
+                                      RowDefinitions="*">
+                                    <Border Grid.Column="0"
+                                            Grid.Row="0"
+                                            BackgroundColor="#374151"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 12"
+                                            WidthRequest="52"
+                                            HeightRequest="52"
+                                            VerticalOptions="Center"
+                                            Padding="10">
+                                        <Image Source="iconblender.png"
+                                               WidthRequest="32"
+                                               HeightRequest="32"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"
+                                               Aspect="AspectFit" />
+                                    </Border>
+                                    
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         Grid.Row="0"
+                                                         Spacing="4"
+                                                         VerticalOptions="Center">
+                                        <Label Text="{Binding FileName}" 
+                                               FontSize="15"
+                                               FontAttributes="Bold"
+                                               FontFamily="OpenSansSemibold"
+                                               TextColor="White"
+                                               LineBreakMode="TailTruncation" />
+                                        <Label Text="{Binding FilePath, Converter={StaticResource FilePathTruncateConverter}}" 
+                                               FontSize="11"
+                                               FontFamily="OpenSansRegular"
+                                               TextColor="#9CA3AF"
+                                               LineBreakMode="TailTruncation"
+                                               Opacity="0.75" />
+                                    </VerticalStackLayout>
+                                    <Picker Grid.Column="2"
+                                            Grid.Row="0"
+                                            SelectedIndex="{Binding RenderType, Converter={StaticResource RenderTypeToIndexConverter}}"
+                                            SelectedIndexChanged="OnRenderTypePickerChanged"
+                                            WidthRequest="130"
+                                            HeightRequest="40"
+                                            FontSize="13"
+                                            FontFamily="OpenSansRegular"
+                                            VerticalOptions="Center">
+                                        <Picker.ItemsSource>
+                                            <x:Array Type="{x:Type x:String}">
+                                                <x:String>Image</x:String>
+                                                <x:String>Animation</x:String>
+                                            </x:Array>
+                                        </Picker.ItemsSource>
+                                    </Picker>
+                                    <Border Grid.Column="3"
+                                            Grid.Row="0"
+                                            BackgroundColor="{Binding Status, Converter={StaticResource StatusToColorConverter}}"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 10"
+                                            Padding="14,8"
+                                            VerticalOptions="Center">
+                                        <Label Text="{Binding Status, Converter={StaticResource StatusToStringConverter}}"
+                                               FontSize="12"
+                                               FontAttributes="Bold"
+                                               FontFamily="OpenSansSemibold"
+                                               TextColor="White" />
+                                    </Border>
+
+                                    <HorizontalStackLayout Grid.Column="4"
+                                                           Grid.Row="0"
+                                                           Spacing="6"
+                                                           VerticalOptions="Center">
+                                        <Button Text="?"
+                                                FontSize="16"
+                                                BackgroundColor="Transparent"
+                                                TextColor="#DFD8F7"
+                                                WidthRequest="36"
+                                                HeightRequest="36"
+                                                CornerRadius="18"
+                                                IsVisible="{Binding Status, Converter={StaticResource StatusToRetryVisibleConverter}}"
+                                                Clicked="OnRetryFileClicked" />
+                                        <ImageButton Source="cross.png"
+                                                    BackgroundColor="Transparent"
+                                                    WidthRequest="36"
+                                                    HeightRequest="36"
+                                                    CornerRadius="18"
+                                                    Clicked="OnRemoveFileClicked">
+                                            <ImageButton.Behaviors>
+                                                <behaviors:HoverImageButtonBehavior />
+                                            </ImageButton.Behaviors>
+                                        </ImageButton>
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" 
+                Style="{StaticResource CardStyle}"
+                Margin="0,16,0,12"
+                x:Name="ProgressCard"
+                IsVisible="{Binding IsProcessing, Converter={StaticResource BoolToVisibilityConverter}}">
+            <VerticalStackLayout Spacing="12">
+                <Label Text="{Binding StatusMessage}"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       FontFamily="OpenSansSemibold"
+                       TextColor="White" />
+                <ProgressBar Progress="{Binding ProgressPercentage, Converter={StaticResource PercentageToProgressConverter}}"
+                             ProgressColor="#512BD4"
+                             HeightRequest="8" />
+                <Label Style="{StaticResource InfoTextStyle}"
+                       TextColor="#9CA3AF"
+                       HorizontalOptions="End">
+                    <Label.Text>
+                        <MultiBinding StringFormat="{}{0} / {1} completed">
+                            <Binding Path="CompletedCount" />
+                            <Binding Path="TotalCount" />
+                        </MultiBinding>
+                    </Label.Text>
+                </Label>
+            </VerticalStackLayout>
+        </Border>
+
+        <Border Grid.Row="2"
+                BackgroundColor="#111827"
+                Stroke="#4B5563"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 12"
+                Padding="16,12"
+                Margin="0,0,0,12"
+                HorizontalOptions="Fill">
+            <HorizontalStackLayout Spacing="12"
+                                 VerticalOptions="Center">
+                <Label Text="Auto shutdown when all renders complete"
+                       Style="{StaticResource InfoTextStyle}"
+                       TextColor="White"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start" />
+                <Switch IsToggled="{Binding AutoShutdown}"
+                        OnColor="#10B981"
+                        ThumbColor="White"
+                        VerticalOptions="Center" />
+            </HorizontalStackLayout>
+        </Border>
+
+        <Grid Grid.Row="3" 
+              ColumnDefinitions="*,Auto,Auto"
+              ColumnSpacing="12">
+            <Button Text="Start Rendering" 
+                    Grid.Column="0"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    Command="{Binding StartRenderCommand}">
+                <Button.Behaviors>
+                    <behaviors:HoverButtonBehavior />
+                </Button.Behaviors>
+            </Button>
+            <Button Text="Cancel" 
+                    Grid.Column="1"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    Command="{Binding CancelRenderCommand}"
+                    IsVisible="{Binding IsProcessing}">
+                <Button.Behaviors>
+                    <behaviors:HoverButtonBehavior />
+                </Button.Behaviors>
+            </Button>
+            <Button Text="Clear List" 
+                    Grid.Column="2"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    Command="{Binding ClearFilesCommand}"
+                    IsVisible="{Binding IsProcessing, Converter={StaticResource InverseBoolConverter}}">
+                <Button.Behaviors>
+                    <behaviors:HoverButtonBehavior />
+                </Button.Behaviors>
+            </Button>
+        </Grid>
+    </Grid>
+</ContentPage>
+
