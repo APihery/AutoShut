@@ -139,7 +139,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Software Engineer specializing in 3D technologies and .NET development, combining technical expertise with creative solutions.
 
-- 🌐 **Portfolio**: [apihery.github.io/aymeric-pihery-portfolio](https://apihery.github.io/aymeric-pihery-portfolio)
+- 🌐 **Portfolio**: [aymeric-pihery.fr/](https://aymeric-pihery.fr/)
 - 💼 **LinkedIn**: [linkedin.com/in/aymeric-pihery](https://www.linkedin.com/in/aymeric-pihery/)
 - 🎨 **Specialties**: C# .NET, Blender, Unity, Unreal Engine, 3D Modeling
 
@@ -154,5 +154,5 @@ Software Engineer specializing in 3D technologies and .NET development, combinin
 ---
 
 <div align="center">
-  Made with ❤️ by <a href="https://apihery.github.io/aymeric-pihery-portfolio">Aymeric PIHERY</a>
+  Made with ❤️ by <a href="https://aymeric-pihery.fr/">Aymeric PIHERY</a>
 </div>

@@ -90,3 +90,6 @@ convert_icon.py
 
 # Installation files (optional - uncomment if you don't want to track the installer)
 # Build/Installer/*.exe
+
+# cursor
+.cursor/
