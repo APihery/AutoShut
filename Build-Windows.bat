@@ -17,9 +17,9 @@ if %errorlevel% neq 0 (
 )
 echo.
 
-REM Clean previous builds
+REM Clean previous builds (Windows framework only)
 echo [2/4] Cleaning previous builds...
-dotnet clean AutoShut\AutoShut.csproj --configuration Release
+dotnet clean AutoShut\AutoShut.csproj --configuration Release -f net10.0-windows10.0.19041.0
 if %errorlevel% neq 0 (
     echo ERROR: Clean failed!
     pause

@@ -2,7 +2,7 @@
 ; Téléchargez Inno Setup depuis : https://jrsoftware.org/isdl.php
 
 #define MyAppName "AutoShut"
-#define MyAppVersion "1.0"
+#define MyAppVersion "1.1"
 #define MyAppPublisher "Your Company Name"
 #define MyAppURL "https://www.yourwebsite.com/"
 #define MyAppExeName "AutoShut.exe"
