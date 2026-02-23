@@ -17,6 +17,9 @@
             <converters:PercentageToProgressConverter x:Key="PercentageToProgressConverter" />
             <converters:RenderTypeToIndexConverter x:Key="RenderTypeToIndexConverter" />
             <converters:StatusToRetryVisibleConverter x:Key="StatusToRetryVisibleConverter" />
+            <converters:StatusToProcessingConverter x:Key="StatusToProcessingConverter" />
+            <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+            <converters:OutputPathDisplayConverter x:Key="OutputPathDisplayConverter" />
             <converters:FilePathTruncateConverter x:Key="FilePathTruncateConverter" />
         </ResourceDictionary>
     </Application.Resources>

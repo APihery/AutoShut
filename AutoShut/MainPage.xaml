@@ -197,7 +197,7 @@
                                     StrokeShape="RoundRectangle 12">
                                 <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" 
                                       ColumnSpacing="18"
-                                      RowDefinitions="*">
+                                      RowDefinitions="Auto,Auto">
                                     <Border Grid.Column="0"
                                             Grid.Row="0"
                                             BackgroundColor="#374151"
@@ -231,6 +231,21 @@
                                                TextColor="#9CA3AF"
                                                LineBreakMode="TailTruncation"
                                                Opacity="0.75" />
+                                        <Label Text="{Binding ProgressDescription}"
+                                               FontSize="12"
+                                               FontFamily="OpenSansRegular"
+                                               TextColor="#60A5FA"
+                                               LineBreakMode="TailTruncation"
+                                               IsVisible="{Binding Status, Converter={StaticResource StatusToProcessingConverter}}"
+                                               Margin="0,4,0,0" />
+                                        <Label Text="{Binding DisplayOutputPath, Converter={StaticResource OutputPathDisplayConverter}}"
+                                               FontSize="11"
+                                               FontFamily="OpenSansRegular"
+                                               TextColor="#34D399"
+                                               LineBreakMode="TailTruncation"
+                                               Opacity="0.9"
+                                               IsVisible="{Binding DisplayOutputPath, Converter={StaticResource StringToVisibilityConverter}}"
+                                               Margin="0,2,0,0" />
                                     </VerticalStackLayout>
                                     <Picker Grid.Column="2"
                                             Grid.Row="0"
@@ -286,6 +301,14 @@
                                             </ImageButton.Behaviors>
                                         </ImageButton>
                                     </HorizontalStackLayout>
+                                    <ProgressBar Grid.Column="0"
+                                                 Grid.ColumnSpan="5"
+                                                 Grid.Row="1"
+                                                 Progress="{Binding RenderProgressPercentage, Converter={StaticResource PercentageToProgressConverter}}"
+                                                 ProgressColor="#60A5FA"
+                                                 HeightRequest="6"
+                                                 Margin="0,12,0,0"
+                                                 IsVisible="{Binding ShowProgressBar}" />
                                 </Grid>
                             </Border>
                         </DataTemplate>

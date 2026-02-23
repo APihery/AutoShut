@@ -12,6 +12,10 @@ public class BlenderFile : INotifyPropertyChanged
     private string? _errorMessage;
     private DateTime? _startTime;
     private DateTime? _endTime;
+    private int _currentFrame;
+    private int _totalFrames;
+    private double _renderProgressPercentage;
+    private string? _expectedOutputPath;
 
     public string FilePath
     {
@@ -35,6 +39,9 @@ public class BlenderFile : INotifyPropertyChanged
             if (_renderType == value) return;
             _renderType = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(ShowFrameProgress));
+            OnPropertyChanged(nameof(ShowProgressBar));
+            OnPropertyChanged(nameof(ProgressDescription));
         }
     }
 
@@ -46,6 +53,7 @@ public class BlenderFile : INotifyPropertyChanged
             if (_status == value) return;
             _status = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(ShowProgressBar));
         }
     }
 
@@ -57,6 +65,7 @@ public class BlenderFile : INotifyPropertyChanged
             if (_outputPath == value) return;
             _outputPath = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(DisplayOutputPath));
         }
     }
 
@@ -98,6 +107,66 @@ public class BlenderFile : INotifyPropertyChanged
     public TimeSpan? Duration => EndTime.HasValue && StartTime.HasValue 
         ? EndTime.Value - StartTime.Value 
         : null;
+
+    public int CurrentFrame
+    {
+        get => _currentFrame;
+        set
+        {
+            if (_currentFrame == value) return;
+            _currentFrame = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(ProgressDescription));
+        }
+    }
+
+    public int TotalFrames
+    {
+        get => _totalFrames;
+        set
+        {
+            if (_totalFrames == value) return;
+            _totalFrames = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(ShowFrameProgress));
+            OnPropertyChanged(nameof(ShowProgressBar));
+            OnPropertyChanged(nameof(ProgressDescription));
+        }
+    }
+
+    public double RenderProgressPercentage
+    {
+        get => _renderProgressPercentage;
+        set
+        {
+            if (Math.Abs(_renderProgressPercentage - value) < 0.01) return;
+            _renderProgressPercentage = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(ProgressDescription));
+        }
+    }
+
+    public bool ShowFrameProgress => RenderType == RenderType.Animation && TotalFrames > 1;
+
+    public bool ShowProgressBar => Status == RenderStatus.Processing && ShowFrameProgress;
+
+    public string ProgressDescription => ShowFrameProgress
+        ? $"Frame {CurrentFrame}/{TotalFrames} ({RenderProgressPercentage:F0}%)"
+        : Status == RenderStatus.Processing ? "Rendering..." : "";
+
+    public string? ExpectedOutputPath
+    {
+        get => _expectedOutputPath;
+        set
+        {
+            if (_expectedOutputPath == value) return;
+            _expectedOutputPath = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(DisplayOutputPath));
+        }
+    }
+
+    public string? DisplayOutputPath => OutputPath ?? ExpectedOutputPath;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 

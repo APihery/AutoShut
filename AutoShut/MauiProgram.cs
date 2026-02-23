@@ -27,6 +27,7 @@ public static class MauiProgram
 #endif
             });
 
+        builder.Services.AddSingleton<IBlenderSettingsExtractor, BlenderSettingsExtractor>();
         builder.Services.AddSingleton<IBlenderRenderer, BlenderRenderer>();
         builder.Services.AddTransient<MainViewModel>();
         builder.Services.AddTransient<MainPage>();

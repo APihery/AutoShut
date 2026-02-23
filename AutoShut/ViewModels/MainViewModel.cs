@@ -10,6 +10,7 @@ namespace AutoShut.ViewModels;
 public class MainViewModel : INotifyPropertyChanged
 {
     private readonly IBlenderRenderer _blenderRenderer;
+    private readonly IBlenderSettingsExtractor _settingsExtractor;
     private bool _isProcessing;
     private int _completedCount;
     private int _totalCount;
@@ -17,9 +18,10 @@ public class MainViewModel : INotifyPropertyChanged
     private bool _autoShutdown;
     private CancellationTokenSource? _cancellationTokenSource;
 
-    public MainViewModel(IBlenderRenderer blenderRenderer)
+    public MainViewModel(IBlenderRenderer blenderRenderer, IBlenderSettingsExtractor settingsExtractor)
     {
         _blenderRenderer = blenderRenderer;
+        _settingsExtractor = settingsExtractor;
         BlenderFiles = new ObservableCollection<BlenderFile>();
         BlenderFiles.CollectionChanged += (s, e) =>
         {
@@ -119,14 +121,17 @@ public class MainViewModel : INotifyPropertyChanged
                 !filePath.EndsWith(".blend1", StringComparison.OrdinalIgnoreCase)) continue;
             if (existingPaths.Contains(filePath)) continue;
 
-            BlenderFiles.Add(new BlenderFile
+            var file = new BlenderFile
             {
                 FilePath = filePath,
                 RenderType = RenderType.Image,
                 Status = RenderStatus.Pending
-            });
+            };
+            BlenderFiles.Add(file);
             existingPaths.Add(filePath);
             added = true;
+
+            _ = LoadSettingsForFileAsync(file);
         }
         
         if (!added) return;
@@ -141,6 +146,30 @@ public class MainViewModel : INotifyPropertyChanged
     private void OnAddFile(string filePath)
     {
         AddFiles(new[] { filePath });
+    }
+
+    private async Task LoadSettingsForFileAsync(BlenderFile file)
+    {
+        if (!_blenderRenderer.IsBlenderInstalled()) return;
+        var blenderPath = _blenderRenderer.GetBlenderExecutablePath();
+        if (string.IsNullOrEmpty(blenderPath)) return;
+
+        try
+        {
+            var settings = await _settingsExtractor.ExtractAsync(file.FilePath, blenderPath);
+            if (settings != null)
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    file.ExpectedOutputPath = settings.OutputPath;
+                    file.TotalFrames = settings.TotalFrames;
+                });
+            }
+        }
+        catch
+        {
+            // Ignore extraction errors
+        }
     }
 
     private void OnRemoveFile(BlenderFile file)
@@ -208,9 +237,15 @@ public class MainViewModel : INotifyPropertyChanged
 
                 file.Status = RenderStatus.Processing;
                 file.StartTime = DateTime.Now;
+                file.CurrentFrame = 0;
+                file.TotalFrames = 0;
+                file.RenderProgressPercentage = 0;
                 StatusMessage = $"Rendering: {file.FileName}";
 
-                var progress = new Progress<string>(_ => { });
+                var progress = new Progress<RenderProgressReport>(r =>
+                {
+                    StatusMessage = r.Message;
+                });
 
                 var success = await _blenderRenderer.RenderAsync(file, progress, cancellationToken);
 

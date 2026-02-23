@@ -38,7 +38,7 @@
 ### Installation
 
 1. Download the latest installer from the [Releases](../../releases) page
-2. Run `AutoShut-Setup-v1.0.exe`
+2. Run `AutoShut-Setup-v1.1.exe`
 3. Follow the installation wizard
 4. Launch **AutoShut for Blender** from the Start Menu
 
